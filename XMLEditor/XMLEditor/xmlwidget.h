@@ -1,20 +1,14 @@
-#ifndef SETTINGSVIEWWIDGET_H
-#define SETTINGSVIEWWIDGET_H
+#ifndef XMLWIDGET_H
+#define XMLWIDGET_H
 
 #include <QObject>
 #include <QWidget>
 #include <QFrame>
-#include <QSettings>
 #include <QTreeView>
-#include <QHBoxLayout>
 #include <QVBoxLayout>
-#include <QPushButton>
 #include <QAbstractItemModel>
 #include <QItemSelectionModel>
 #include <QLabel>
-#include <QColumnView>
-#include <QListView>
-#include <QListWidget>
 
 #include "xmlmodel.h"
 
@@ -25,26 +19,22 @@ public:
     XMLWidget(QWidget *parent = Q_NULLPTR);
     ~XMLWidget();
 public slots:
+    void slotOpen();
     void slotSave();
     void slotSaveAs();
+    void slotToOldFormat();
+    void slotToNewFormat();
     void slotViewResize();
     void slotRevertAll();
-    void slotUpdateTreeView(QModelIndex curIndex,QModelIndex prevIndex = QModelIndex());
 private:
     QLabel* mCurrentFileLabel;
     QTreeView* mTreeView;
-    QListView* mListView;
-    QPushButton* mButtonSave;
-    QPushButton* mButtonSaveAs;
-    QPushButton* mButtonRevertAll;
-    QPushButton* mButtonReload;
     XMLModel* mModel;
     QItemSelectionModel* mSelectionModelTree;
-    QItemSelectionModel* mSelectionModelList;
     QString mCurrentFileName;
     XMLNode* mRootNode;
     void build();
     void initializeModel();
 };
 
-#endif // SETTINGSVIEWWIDGET_H
+#endif // XMLWIDGET_H

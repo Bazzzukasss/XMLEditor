@@ -30,4 +30,4 @@ class XMLModel : public QAbstractItemModel
         void signalRevertAll();
 };
 
-#endif // SETTINGSMODEL_H
+#endif // XMLMODEL_H
