@@ -10,10 +10,12 @@ XMLModel::XMLModel(QObject *parent)
 
 XMLModel::~XMLModel()
 {
+    delete mRootNode;
 }
 
 void XMLModel::setRootNode(XMLNode *node)
 {
+    delete mRootNode;
     mRootNode=node;
 }
 
@@ -110,7 +112,11 @@ Qt::ItemFlags XMLModel::flags(const QModelIndex &index) const
 {
     Qt::ItemFlags theFlags = QAbstractItemModel::flags(index);
     if (index.isValid())
-        theFlags |= Qt::ItemIsSelectable|Qt::ItemIsEnabled|Qt::ItemIsEditable;;
+    {
+        theFlags |= Qt::ItemIsSelectable|Qt::ItemIsEnabled;
+        if(index.column()!=0)
+            theFlags|=Qt::ItemIsEditable;
+    }
     return theFlags;
 }
 

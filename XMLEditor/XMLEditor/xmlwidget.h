@@ -30,11 +30,12 @@ private:
     QLabel* mCurrentFileLabel;
     QTreeView* mTreeView;
     XMLModel* mModel;
-    QItemSelectionModel* mSelectionModelTree;
+    QItemSelectionModel* mSelectionModel;
     QString mCurrentFileName;
     XMLNode* mRootNode;
+    void setCurrentFileName(const QString& filename);
     void build();
-    void initializeModel();
+    void updateModel();
 };
 
 #endif // XMLWIDGET_H

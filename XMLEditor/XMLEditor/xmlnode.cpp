@@ -13,8 +13,7 @@ XMLNode::XMLNode( XMLNode *parent, const XMLData &xmlData)
 
 XMLNode::~XMLNode()
 {
-    for(XMLNode* node : mNodes)
-        delete node;
+    qDeleteAll(mNodes);
 }
 
 void XMLNode::addNode(XMLNode *node)
