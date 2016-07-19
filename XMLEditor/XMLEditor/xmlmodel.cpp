@@ -5,7 +5,7 @@ XMLModel::XMLModel(QObject *parent)
     :QAbstractItemModel(parent)
 {
     mRootNode = 0;
-    mColumnsCaption << tr("Parameter") << tr("Value");
+    mColumnsCaption << tr("TAG") << tr("VALUE") << tr("ATTRIBUTE");
 }
 
 XMLModel::~XMLModel()
@@ -36,17 +36,23 @@ XMLNode *XMLModel::nodeFromIndex( const QModelIndex &index) const
         return mRootNode;
 }
 
-int XMLModel::rowCount(const QModelIndex& parent) const
+int XMLModel::rowCount(const QModelIndex& index) const
 {
-    XMLNode *parentNode = nodeFromIndex(parent);
+    XMLNode *parentNode = nodeFromIndex(index);
     if (!parentNode)
         return 0;
     return parentNode->getNodes().count();
 }
 
-int XMLModel::columnCount(const QModelIndex&) const
+int XMLModel::columnCount(const QModelIndex&  index) const
 {
-    return mColumnsCaption.size();
+    if(index.isValid())
+    {
+        XMLNode* node = nodeFromIndex(index);
+        if(node)
+            return node->getAttributes().size() + mColumnsCaption.size();
+    }
+    return mColumnsCaption.size()+5;
 }
 QModelIndex XMLModel::parent(const QModelIndex& child) const
 {
@@ -73,17 +79,31 @@ QVariant XMLModel::data(const QModelIndex& index, int role) const
     XMLNode *node = nodeFromIndex(index);
     if (!node)
         return QVariant();
-    switch(index.column())
+    int column =index.column();
+    QString value;
+    switch(column)
     {
         case 0:
             return node->getName();
         break;
         case 1:
-            return node->getValue();
+            value = node->getValue().toString();
+            if(!value.isEmpty())
+                return (role == Qt::EditRole) ? value : "value = " + value;
+            else
+                return value;
         break;
         default:
-            return QVariant();
+            if(column < node->getAttributes().size())
+            {
+                QString aValue=node->getAttributes()[column].value().toString();
+                QString aName=node->getAttributes()[column].name().toString();
+                return (role == Qt::EditRole) ? aValue : aName+" = "+aValue;
+            }
+            else
+                return QVariant();
         break;
+
     }
     return QVariant();
 }
@@ -103,8 +123,13 @@ bool XMLModel::setData(const QModelIndex &index, const QVariant &value, int role
 
 QVariant XMLModel::headerData(int section,Qt::Orientation orientation, int role) const
 {
-    if( orientation == Qt::Horizontal && role == Qt::DisplayRole && section < mColumnsCaption.size() )
+    if( orientation == Qt::Horizontal && role == Qt::DisplayRole)
+    {
+        if( section >= mColumnsCaption.size() )
+            section = mColumnsCaption.size()-1;
         return mColumnsCaption[section];
+    }
+
     return QVariant();
 }
 

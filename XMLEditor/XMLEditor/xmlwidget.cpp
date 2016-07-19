@@ -91,10 +91,8 @@ void XMLWidget::slotToNewFormat()
 
 void XMLWidget::slotViewResize()
 {
-    mTreeView->resizeColumnToContents(0);
-    mTreeView->resizeColumnToContents(1);
-    mTreeView->resizeColumnToContents(2);
-    //mTreeView->resizeColumnToContents(3);
+    for(int column=0;column<5;++column)
+        mTreeView->resizeColumnToContents(column);
 }
 
 void XMLWidget::slotRevertAll()
