@@ -35,7 +35,6 @@ private:
     XMLNode* mRootNode;
     void setCurrentFileName(const QString& filename);
     void build();
-    void updateModel();
 };
 
 #endif // XMLWIDGET_H

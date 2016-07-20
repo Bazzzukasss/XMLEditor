@@ -10,13 +10,18 @@ XMLWidget::XMLWidget(QWidget *parent)
 {
     mModel = nullptr;
     mSelectionModel = nullptr;
-    mRootNode = nullptr;
     mTreeView = new QTreeView(this);
     mCurrentFileLabel = new QLabel(this);
     setCurrentFileName("");
+    mModel =  new XMLModel();
+    mRootNode = 0;
+    mTreeView->setModel(mModel);
 
-    connect(mTreeView,          SIGNAL(expanded(QModelIndex)),  this,   SLOT(slotViewResize()));
-    connect(mTreeView,          SIGNAL(collapsed(QModelIndex)), this,   SLOT(slotViewResize()));
+    mSelectionModel = new QItemSelectionModel(mModel,this);
+    mTreeView->setSelectionModel(mSelectionModel);
+
+    //connect(mTreeView,          SIGNAL(expanded(QModelIndex)),  this,   SLOT(slotViewResize()));
+    //connect(mTreeView,          SIGNAL(collapsed(QModelIndex)), this,   SLOT(slotViewResize()));
 
     build();
 }
@@ -37,22 +42,6 @@ void XMLWidget::build()
     mainLayout->setSpacing(4);
 }
 
-void XMLWidget::updateModel()
-{
-    if(mModel!=nullptr)
-        delete mModel;
-
-    if(mSelectionModel!=nullptr)
-        delete mSelectionModel;
-
-    mModel =  new XMLModel();
-    mModel->setRootNode(mRootNode);
-    mTreeView->setModel(mModel);
-
-    mSelectionModel = new QItemSelectionModel(mModel,this);
-    mTreeView->setSelectionModel(mSelectionModel);
-}
-
 //SLOTS
 void XMLWidget::slotOpen()
 {
@@ -62,7 +51,7 @@ void XMLWidget::slotOpen()
         setCurrentFileName(filename);
         mRootNode = new XMLNode();
         XMLProcessor::Load(filename,mRootNode);
-        updateModel();
+        mModel->setRootNode(mRootNode);
     }
 }
 void XMLWidget::slotSave()

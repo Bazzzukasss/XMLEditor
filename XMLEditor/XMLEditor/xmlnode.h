@@ -29,13 +29,13 @@ public:
     void setValue(const QVariant &value);
 
     QList<XMLNode *> getNodes() const;
+    int getAttributesCount() const;
 
 private:
     XMLNode* mParent;
     QString mName;
     QVariant mValue;
     QXmlStreamAttributes mAttributes;
-    QXmlStreamAttributes mOriginalAttributes;
     QList<XMLNode*> mNodes;
 };
 

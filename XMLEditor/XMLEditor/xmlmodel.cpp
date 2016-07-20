@@ -15,7 +15,8 @@ XMLModel::~XMLModel()
 
 void XMLModel::setRootNode(XMLNode *node)
 {
-    delete mRootNode;
+    if((mRootNode!=0)&&(mRootNode!=nullptr))
+        delete mRootNode;
     mRootNode=node;
 }
 

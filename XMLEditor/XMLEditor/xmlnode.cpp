@@ -5,8 +5,7 @@ XMLNode::XMLNode( XMLNode *parent, const XMLData &xmlData)
     mParent(parent),
     mName(xmlData.mName),
     mValue(xmlData.mValue),
-    mAttributes(xmlData.mAttributes),
-    mOriginalAttributes(xmlData.mAttributes)
+    mAttributes(xmlData.mAttributes)
 {
 
 }
@@ -64,4 +63,9 @@ void XMLNode::setValue(const QVariant &value)
 QList<XMLNode *> XMLNode::getNodes() const
 {
     return mNodes;
+}
+
+int XMLNode::getAttributesCount() const
+{
+    return mAttributes.size();
 }
