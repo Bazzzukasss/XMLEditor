@@ -20,8 +20,8 @@ XMLWidget::XMLWidget(QWidget *parent)
     mSelectionModel = new QItemSelectionModel(mModel,this);
     mTreeView->setSelectionModel(mSelectionModel);
 
-    //connect(mTreeView,          SIGNAL(expanded(QModelIndex)),  this,   SLOT(slotViewResize()));
-    //connect(mTreeView,          SIGNAL(collapsed(QModelIndex)), this,   SLOT(slotViewResize()));
+    connect(mTreeView,          SIGNAL(expanded(QModelIndex)),  this,   SLOT(slotViewResize()));
+    connect(mTreeView,          SIGNAL(collapsed(QModelIndex)), this,   SLOT(slotViewResize()));
 
     build();
 }
@@ -51,7 +51,9 @@ void XMLWidget::slotOpen()
         setCurrentFileName(filename);
         mRootNode = new XMLNode();
         XMLProcessor::Load(filename,mRootNode);
+        mRootNode->setParent(0);
         mModel->setRootNode(mRootNode);
+        //mTreeView->expandAll();
     }
 }
 void XMLWidget::slotSave()

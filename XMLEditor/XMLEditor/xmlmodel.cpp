@@ -22,11 +22,14 @@ void XMLModel::setRootNode(XMLNode *node)
 
 QModelIndex XMLModel::index(int row, int column, const QModelIndex &parent) const
 {
-    if (!mRootNode)
+    if (!mRootNode || row < 0 || column < 0)
         return QModelIndex();
 
     XMLNode *parentNode = nodeFromIndex(parent);
-    return createIndex(row, column, parentNode->getNodes()[row]);
+    XMLNode *childNode = parentNode->getNodes().value(row);
+    if (!childNode)
+        return QModelIndex();
+    return createIndex(row, column, childNode);
 }
 
 XMLNode *XMLModel::nodeFromIndex( const QModelIndex &index) const
@@ -52,6 +55,8 @@ int XMLModel::columnCount(const QModelIndex&  index) const
         XMLNode* node = nodeFromIndex(index);
         if(node)
             return node->getAttributes().size() + mColumnsCaption.size();
+        else
+            return mColumnsCaption.size();
     }
     return mColumnsCaption.size()+5;
 }
