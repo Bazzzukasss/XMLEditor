@@ -1,7 +1,7 @@
 #include "xmlnode.h"
 
 XMLNode::XMLNode( XMLNode *parent, const XMLData &xmlData)
-    :QObject(0),
+    ://QObject(0),
     mParent(parent),
     mName(xmlData.mName),
     mValue(xmlData.mValue),
@@ -68,4 +68,20 @@ const QList<XMLNode *>& XMLNode::getNodes() const
 int XMLNode::getAttributesCount() const
 {
     return mAttributes.size();
+}
+
+void XMLNode::Generate(int subNodesCount)
+{
+    this->mName = "genNodeName"+QString().number(subNodesCount);
+    this->mValue = "genNodeValue"
+                   ""+QString().number(subNodesCount);
+
+    for(int n=0;n<subNodesCount;n++)
+    {
+        QXmlStreamAttributes xmlAttributes;
+        for(int a=0;a<subNodesCount;a++)
+            xmlAttributes.push_back(QXmlStreamAttribute("attributesName"+QString().number(a),"attributesValue"+QString().number(a)));
+        XMLData xmlData{"SubNodeName"+QString().number(n),"SubNodeValuee"+QString().number(n),xmlAttributes};
+        addNode(new XMLNode(this,xmlData));
+    }
 }

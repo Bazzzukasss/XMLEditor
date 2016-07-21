@@ -9,8 +9,8 @@
 
 #include "xmldata.h"
 
-class XMLNode:public QObject{
-    Q_OBJECT
+class XMLNode{//:public QObject{
+    //Q_OBJECT
 public:
     XMLNode( XMLNode *parent = 0,const XMLData &xmlData = XMLData());
     ~XMLNode();
@@ -30,6 +30,8 @@ public:
 
     const QList<XMLNode *>& getNodes() const;
     int getAttributesCount() const;
+
+    void Generate(int subNodesCount = 2);
 
 private:
     XMLNode* mParent;

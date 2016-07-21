@@ -15,7 +15,7 @@ XMLModel::~XMLModel()
 
 void XMLModel::setRootNode(XMLNode *node)
 {
-    if((mRootNode!=0)&&(mRootNode!=nullptr))
+    //if((mRootNode!=0)&&(mRootNode!=nullptr))
         delete mRootNode;
     mRootNode=node;
 }
@@ -102,10 +102,10 @@ QVariant XMLModel::data(const QModelIndex& index, int role) const
                 return value;
         break;
         default:
-            if(column < node->getAttributes().size())
+            if(column-2 < node->getAttributes().size())
             {
-                QString aValue=node->getAttributes()[column].value().toString();
-                QString aName=node->getAttributes()[column].name().toString();
+                QString aValue=node->getAttributes()[column-2].value().toString();
+                QString aName=node->getAttributes()[column-2].name().toString();
                 return (role == Qt::EditRole) ? aValue : aName+" = "+aValue;
             }
             else
