@@ -26,6 +26,8 @@ QModelIndex XMLModel::index(int row, int column, const QModelIndex &parent) cons
         return QModelIndex();
 
     XMLNode *parentNode = nodeFromIndex(parent);
+    if(!parentNode)
+        return QModelIndex();
     XMLNode *childNode = parentNode->getNodes().value(row);
     if (!childNode)
         return QModelIndex();
