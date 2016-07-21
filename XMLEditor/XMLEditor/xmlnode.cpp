@@ -60,7 +60,7 @@ void XMLNode::setValue(const QVariant &value)
     mValue = value;
 }
 
-QList<XMLNode *> XMLNode::getNodes() const
+const QList<XMLNode *>& XMLNode::getNodes() const
 {
     return mNodes;
 }

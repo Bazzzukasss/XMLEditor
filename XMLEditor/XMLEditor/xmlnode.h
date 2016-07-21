@@ -28,7 +28,7 @@ public:
     QVariant getValue() const;
     void setValue(const QVariant &value);
 
-    QList<XMLNode *> getNodes() const;
+    const QList<XMLNode *>& getNodes() const;
     int getAttributesCount() const;
 
 private:
