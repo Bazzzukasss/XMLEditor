@@ -9,8 +9,7 @@
 #include <QAbstractItemModel>
 #include <QItemSelectionModel>
 #include <QLabel>
-
-#include "xmlmodel.h"
+#include "treemodel.h"
 
 class XMLWidget : public QFrame
 {
@@ -26,14 +25,14 @@ public slots:
     void slotToNewFormat();
     void slotViewResize();
     void slotRevertAll();
+    void slotInsert();
+    void slotDelete();
 private:
     QLabel* mCurrentFileLabel;
     QTreeView* mTreeView;
-    XMLModel* mModel;
+    TreeModel* mModel;
     QItemSelectionModel* mSelectionModel;
-    QString mCurrentFileName;
-    XMLNode* mRootNode;
-    void setCurrentFileName(const QString& filename);
+    void updateFileLabel(const QString& filename);
     void build();
 };
 

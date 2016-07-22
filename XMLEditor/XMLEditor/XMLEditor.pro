@@ -14,17 +14,17 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    xmlnode.cpp \
     xmlprocessor.cpp \
-    xmlmodel.cpp \
-    xmlwidget.cpp
+    xmlwidget.cpp \
+    treeitem.cpp \
+    treemodel.cpp
 
 HEADERS  += mainwindow.h \
-    xmlnode.h \
     xmlprocessor.h \
     xmldata.h \
-    xmlmodel.h \
-    xmlwidget.h
+    xmlwidget.h \
+    treeitem.h \
+    treemodel.h
 
 FORMS    += mainwindow.ui
 

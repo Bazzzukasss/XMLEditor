@@ -1,5 +1,8 @@
 #include <QFile>
+#include <QDebug>
+
 #include "xmlprocessor.h"
+#include "xmldata.h"
 
 XMLProcessor* XMLProcessor::mInstance = nullptr;
 
@@ -15,14 +18,14 @@ XMLProcessor::~XMLProcessor()
     delete mInstance;
 }
 
-bool XMLProcessor::Load(const QString &fileName, XMLNode *node)
+bool XMLProcessor::Load(const QString &fileName, TreeItem *item)
 {
     QFile file(fileName);
     if(file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         QXmlStreamReader reader(&file);
         reader.isStartDocument();
-        load(reader,node);
+        load(reader,item);
 
         if (reader.hasError())
         {
@@ -35,7 +38,7 @@ bool XMLProcessor::Load(const QString &fileName, XMLNode *node)
     return false;
 }
 
-bool XMLProcessor::Save(const QString &fileName, const XMLNode *node)
+bool XMLProcessor::Save(const QString &fileName, const TreeItem *item)
 {
     QFile file(fileName);
     if(file.open(QIODevice::WriteOnly | QIODevice::Text))
@@ -44,7 +47,7 @@ bool XMLProcessor::Save(const QString &fileName, const XMLNode *node)
 
         writer.setAutoFormatting(true);
         writer.writeStartDocument();
-        save(writer,node);
+        save(writer,item);
         writer.writeEndDocument();
 
         if (writer.hasError())
@@ -57,14 +60,12 @@ bool XMLProcessor::Save(const QString &fileName, const XMLNode *node)
     return false;
 }
 
-#include <QDebug>
-
-bool XMLProcessor::load(QXmlStreamReader &reader, XMLNode *node)
+bool XMLProcessor::load(QXmlStreamReader &reader, TreeItem *item)
 {
     std::vector<XMLData> stack;
     XMLData data;
-    XMLNode* currentNode=node;
-    XMLNode* subNode;
+    TreeItem* currentItem=item;
+    TreeItem* subItem;
     size_t stackSize = 0;
 
     while (!reader.atEnd())
@@ -74,13 +75,13 @@ bool XMLProcessor::load(QXmlStreamReader &reader, XMLNode *node)
         {
             case QXmlStreamReader::StartElement:
 
-                data.mAttributes = reader.attributes();
-                data.mName = reader.name().toString();
-                data.mValue.clear();
+                data.setAttributes(reader.attributes());
+                data.setName(reader.name().toString());
+                data.setValue(QString());
 
-                subNode = new XMLNode(currentNode,data);
-                currentNode->addNode( subNode );
-                currentNode = subNode;
+                subItem = new TreeItem(data.getData(),currentItem);
+                currentItem->addItem( subItem );
+                currentItem = subItem;
 
                 if (stackSize < stack.size())
                     stack.resize(stackSize);
@@ -91,12 +92,12 @@ bool XMLProcessor::load(QXmlStreamReader &reader, XMLNode *node)
                 break;
             case QXmlStreamReader::EndElement:
                 if (stackSize == stack.size())
-                    currentNode->setValue(stack.back().mValue);
+                    currentItem->setData(stack.back().getData());
                 --stackSize;
-                currentNode = currentNode->getParent();
+                currentItem = currentItem->getParent();
                 break;
             case QXmlStreamReader::Characters:
-                stack.back().mValue = reader.text().toString();
+                stack.back().setValue(reader.text().toString());
                 break;
             default:
                 break;
@@ -106,15 +107,16 @@ bool XMLProcessor::load(QXmlStreamReader &reader, XMLNode *node)
     return true;
 }
 
-bool XMLProcessor::save(QXmlStreamWriter &writer, const XMLNode *node)
+bool XMLProcessor::save(QXmlStreamWriter &writer, const TreeItem *item)
 {
-    for (XMLNode* subNode : node->getNodes())
+    for (TreeItem* subItem : item->getItems())
     {
-        writer.writeStartElement(subNode->getName());
-        writer.writeAttributes(subNode->getAttributes());
-        if(!subNode->getValue().isNull())
-            writer.writeCharacters(subNode->getValue().toString());
-        save(writer,subNode);
+        XMLData data(subItem->getData());
+        writer.writeStartElement(data.getName());
+        writer.writeAttributes(data.getAttributes());
+        if(!data.getValue().isNull())
+            writer.writeCharacters(data.getValue());
+        save(writer,subItem);
         writer.writeEndElement();
     }
 

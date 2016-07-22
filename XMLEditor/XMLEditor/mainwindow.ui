@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>1115</width>
+    <height>667</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -32,7 +32,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>400</width>
+     <width>1115</width>
      <height>21</height>
     </rect>
    </property>
@@ -51,8 +51,17 @@
     <addaction name="actionToOldFormat"/>
     <addaction name="actionToNewFormat"/>
    </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="actionInsertTag"/>
+    <addaction name="actionInsertSubtag"/>
+    <addaction name="actionDelete"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuConvert"/>
+   <addaction name="menuEdit"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -86,6 +95,21 @@
   <action name="actionToNewFormat">
    <property name="text">
     <string>To new format</string>
+   </property>
+  </action>
+  <action name="actionInsertTag">
+   <property name="text">
+    <string>Insert tag</string>
+   </property>
+  </action>
+  <action name="actionDelete">
+   <property name="text">
+    <string>Delete tag</string>
+   </property>
+  </action>
+  <action name="actionInsertSubtag">
+   <property name="text">
+    <string>Insert subtag</string>
    </property>
   </action>
  </widget>

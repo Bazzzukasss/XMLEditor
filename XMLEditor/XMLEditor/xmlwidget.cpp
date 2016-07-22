@@ -12,13 +12,14 @@ XMLWidget::XMLWidget(QWidget *parent)
     mSelectionModel = nullptr;
     mTreeView = new QTreeView(this);
     mCurrentFileLabel = new QLabel(this);
-    setCurrentFileName("");
-    mModel =  new XMLModel();
-    mRootNode = 0;
+    updateFileLabel("");
+    mModel =  new TreeModel(":/res/res/xml_source_format.xml");
     mTreeView->setModel(mModel);
+    mTreeView->expandAll();
+    slotViewResize();
 
-    //mSelectionModel = new QItemSelectionModel(mModel,this);
-    //mTreeView->setSelectionModel(mSelectionModel);
+    mSelectionModel = new QItemSelectionModel(mModel,this);
+    mTreeView->setSelectionModel(mSelectionModel);
 
     connect(mTreeView,          SIGNAL(expanded(QModelIndex)),  this,   SLOT(slotViewResize()));
     connect(mTreeView,          SIGNAL(collapsed(QModelIndex)), this,   SLOT(slotViewResize()));
@@ -45,44 +46,27 @@ void XMLWidget::build()
 //SLOTS
 void XMLWidget::slotOpen()
 {
-    QString filename = QFileDialog::getOpenFileName(this, "Open file", mCurrentFileName, "files(*.xml )");
+    QString filename = QFileDialog::getOpenFileName(this, "Open file", mModel->getFileName(), "files(*.xml )");
     if(!filename.isEmpty())
     {
-        setCurrentFileName(filename);
-        //mTreeView->clearSelection();
-        //mTreeView->clearFocus();
-        mRootNode = new XMLNode();
-        XMLProcessor::Load(filename,mRootNode);
-        mRootNode->setParent(0);
-        /*
-        XMLNode* node= new XMLNode();
-        node->Generate(4);
-        node->setParent(mRootNode);
-        mRootNode->addNode(node);
-        */
-        mModel->setRootNode(mRootNode);
-
+        delete mModel;
+        mModel = new TreeModel(filename);
+        mTreeView->setModel(mModel);
+        mTreeView->expandAll();
+        updateFileLabel(filename);
     }
 }
 void XMLWidget::slotSave()
 {
-    //XMLProcessor::Save(QString(mCurrentFileName),mRootNode);
-    mRootNode->getNodes()[0]->setName("TEST");
-
-    XMLNode* node= new XMLNode();
-    node->Generate(4);
-    node->setParent(mRootNode);
-    mRootNode->addNode(node);
-    mModel->setRootNode(mRootNode);
-
+    mModel->Save();
 }
 void XMLWidget::slotSaveAs()
 {
-    QString filename = QFileDialog::getSaveFileName(this, "Save file", mCurrentFileName, "files(*.xml )");
+    QString filename = QFileDialog::getSaveFileName(this, "Save file", mModel->getFileName(), "files(*.xml )");
     if(!filename.isEmpty())
     {
-        setCurrentFileName(filename);
-        slotSave();
+        mModel->Save(filename);
+        updateFileLabel(filename);
     }
 }
 
@@ -98,18 +82,35 @@ void XMLWidget::slotToNewFormat()
 
 void XMLWidget::slotViewResize()
 {
-    for(int column=0;column<5;++column)
+    for(int column=0;column<mModel->columnCount();++column)
         mTreeView->resizeColumnToContents(column);
 }
 
 void XMLWidget::slotRevertAll()
 {
-    emit mModel->signalRevertAll();
+    //emit mModel->signalRevertAll();
     emit mModel->layoutChanged();
 }
 
-void XMLWidget::setCurrentFileName(const QString& filename)
+void XMLWidget::slotInsert()
 {
-    mCurrentFileName = filename;
-    mCurrentFileLabel->setText("<b>Curent file  :   </b>" + mCurrentFileName);
+    QModelIndex index = mSelectionModel->currentIndex();
+
+    if (!mModel->insertRow(index.row()+1, index.parent()))
+        return;
+
+    for (int column = 0; column < mModel->columnCount(index.parent()); ++column)
+    {
+        QModelIndex child = mModel->index(index.row()+1, column, index.parent());
+        mModel->setData(child, QVariant("[No data]"), Qt::EditRole);
+    }
+}
+void XMLWidget::slotDelete()
+{
+    QModelIndex index = mSelectionModel->currentIndex();
+    mModel->removeRow(index.row(), index.parent());
+}
+void XMLWidget::updateFileLabel(const QString& filename)
+{
+    mCurrentFileLabel->setText("<b>Curent file  :   </b>" + filename);
 }
