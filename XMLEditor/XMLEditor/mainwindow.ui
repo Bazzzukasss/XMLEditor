@@ -56,7 +56,7 @@
      <string>Edit</string>
     </property>
     <addaction name="actionInsertTag"/>
-    <addaction name="actionInsertSubtag"/>
+    <addaction name="actionInsertSubTag"/>
     <addaction name="actionDelete"/>
    </widget>
    <addaction name="menuFile"/>
@@ -107,7 +107,7 @@
     <string>Delete tag</string>
    </property>
   </action>
-  <action name="actionInsertSubtag">
+  <action name="actionInsertSubTag">
    <property name="text">
     <string>Insert subtag</string>
    </property>

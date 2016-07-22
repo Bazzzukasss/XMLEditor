@@ -25,7 +25,8 @@ public slots:
     void slotToNewFormat();
     void slotViewResize();
     void slotRevertAll();
-    void slotInsert();
+    void slotInsertTag();
+    void slotInsertSubTag();
     void slotDelete();
 private:
     QLabel* mCurrentFileLabel;
