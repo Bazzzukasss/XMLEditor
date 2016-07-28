@@ -13,7 +13,7 @@ XMLWidget::XMLWidget(QWidget *parent)
     mTreeView = new QTreeView(this);
     mCurrentFileLabel = new QLabel(this);
     updateFileLabel("");
-    mModel =  new TreeModel(":/res/res/xml_source_format.xml");
+    mModel =  new TreeModel(":/res/res/xml_new_format.xml");
     mTreeView->setModel(mModel);
     //mTreeView->expandAll();
     slotViewResize();
