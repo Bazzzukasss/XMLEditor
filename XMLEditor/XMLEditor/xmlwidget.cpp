@@ -4,7 +4,7 @@
 
 #include "xmlwidget.h"
 #include "xmlprocessor.h"
-
+#include "treedelegate.h"
 XMLWidget::XMLWidget(QWidget *parent)
     :QFrame(parent)
 {
@@ -20,6 +20,7 @@ XMLWidget::XMLWidget(QWidget *parent)
 
     mSelectionModel = new QItemSelectionModel(mModel);
     mTreeView->setSelectionModel(mSelectionModel);
+    mTreeView->setItemDelegate(new TreeDelegate());
 
     connect(mTreeView,          SIGNAL(expanded(QModelIndex)),  this,   SLOT(slotViewResize()));
     connect(mTreeView,          SIGNAL(collapsed(QModelIndex)), this,   SLOT(slotViewResize()));

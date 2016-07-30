@@ -17,14 +17,16 @@ SOURCES += main.cpp\
     xmlprocessor.cpp \
     xmlwidget.cpp \
     treeitem.cpp \
-    treemodel.cpp
+    treemodel.cpp \
+    treedelegate.cpp
 
 HEADERS  += mainwindow.h \
     xmlprocessor.h \
     xmldata.h \
     xmlwidget.h \
     treeitem.h \
-    treemodel.h
+    treemodel.h \
+    treedelegate.h
 
 FORMS    += mainwindow.ui
 
