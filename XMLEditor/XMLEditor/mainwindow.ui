@@ -44,13 +44,6 @@
     <addaction name="actionSave"/>
     <addaction name="actionSaveAs"/>
    </widget>
-   <widget class="QMenu" name="menuConvert">
-    <property name="title">
-     <string>Convert</string>
-    </property>
-    <addaction name="actionToOldFormat"/>
-    <addaction name="actionToNewFormat"/>
-   </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
      <string>Edit</string>
@@ -60,7 +53,6 @@
     <addaction name="actionDelete"/>
    </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuConvert"/>
    <addaction name="menuEdit"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
